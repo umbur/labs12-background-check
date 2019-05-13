@@ -1,11 +1,41 @@
 const db = require('../../data/dbConfig.js');
 const bcrypt = require('bcryptjs');
+// call to passportjs: 
+const passport = require(passport-facebook);
+
 
 mudule.exports = server => {
     server.post('api/register', register);
     server.post('api/login', login);
 } 
 
+// Register Endpoint here(working on it...):
+app.post('/login',
+  passport.authenticate('local'),
+  function register(req, res) {
+    let user = req.body;
+    if(user.username && user.password){
+        const hash = bcrypt.hashSync(user.password, 4)
+        user.password = hash
+        db('users').insert(user).then(result => {
+            const [id] = result;
+            db('users').where({id}).first().then(userAdded => {
+                res.status(200).json(userAdded)
+            })
+            .catch(err => {
+                res.status(500).json({'Error accessing DB'})
+            }) 
+        })
+    } .catch(err => {
+        res.status(400).json({message: "Error, probably the user already exists"})
+        console.log(err);
+      })
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+    res.redirect('/users/' + req.user.username);
+  });
+
+// Example:
 function register(req, res) {
     // Implement user registration:
     let user = req.body;
@@ -35,7 +65,7 @@ function register(req, res) {
     }
   }
 
+  // Login Endpoint here:
+
+
     
-
-
-
